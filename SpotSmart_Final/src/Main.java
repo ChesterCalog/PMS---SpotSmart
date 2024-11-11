@@ -55,17 +55,24 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    System.out.print("Enter vehicle type (1 for car, 2 for motorcycle): ");
-                    int vehicleTypeChoice = scanner.nextInt();
-                    scanner.nextLine();  // Consume newline
-
-                    String vehicleType = vehicleTypeChoice == 1 ? "car" : "motorcycle";
-
                     System.out.print("Enter license plate: ");
                     String licensePlate = scanner.nextLine();
                     System.out.print("Enter owner name: ");
                     String owner = scanner.nextLine();
-                    parkingLot.addVehicle(vehicleType, licensePlate, owner);
+                    System.out.print("Enter vehicle type (1 for car, 2 for motorcycle): ");
+                    String typeInput = scanner.nextLine();
+                    String vehicleType;
+
+                    if (typeInput.equals("1")) {
+                        vehicleType = "car";
+                    } else if (typeInput.equals("2")) {
+                        vehicleType = "motorcycle";
+                    } else {
+                        System.out.println("Invalid vehicle type!");
+                        return;
+                    }
+                    parkingLot.addVehicle(licensePlate, owner, vehicleType);
+                    System.out.println("Vehicle added successfully!");
                     break;
                 case 2:
                     System.out.print("Enter license plate to remove: ");
