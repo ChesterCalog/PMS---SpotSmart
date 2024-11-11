@@ -4,11 +4,17 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws SQLException {
         Scanner scanner = new Scanner(System.in);
-
         // Default parking spot counts
         int carSpotsCount = 10;
-        int motorcycleSpotsCount = 5;
+        int motorcycleSpotsCount = 10;
 
+        String asciiArt =
+                " _____         _   _____               _   \n" +
+                "|   __|___ ___| |_|   __|_____ ___ ___| |_ \n" +
+                "|__   | . | . |  _|__   |     | .'|  _|  _|\n" +
+                "|_____|  _|___|_| |_____|_|_|_|__,|_| |_|  \n" +
+                "      |_|                                 ";
+        System.out.println(asciiArt);
         ParkingLot parkingLot = new ParkingLot(carSpotsCount, motorcycleSpotsCount);
 
         while (true) {
@@ -43,12 +49,13 @@ public class Main {
 
     private static void useSystem(Scanner scanner, ParkingLot parkingLot) throws SQLException {
         while (true) {
-            System.out.println("\nUse System Menu:");
+            System.out.println("\nParking Lot System:");
             System.out.println("1. Add Vehicle");
             System.out.println("2. Remove Vehicle");
             System.out.println("3. Find Vehicle");
             System.out.println("4. Display Parking");
-            System.out.println("5. Back to Main Menu");
+            System.out.println("5. Clear All Vehicles");
+            System.out.println("6. Back to Main Menu");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -72,7 +79,6 @@ public class Main {
                         return;
                     }
                     parkingLot.addVehicle(licensePlate, owner, vehicleType);
-                    System.out.println("Vehicle added successfully!");
                     break;
                 case 2:
                     System.out.print("Enter license plate to remove: ");
@@ -88,6 +94,13 @@ public class Main {
                     parkingLot.displayParking();
                     break;
                 case 5:
+                    try {
+                        parkingLot.clearAllVehicles();
+                    } catch (SQLException e) {
+                        System.out.println("Error clearing vehicles: " + e.getMessage());
+                    }
+                    break;
+                case 6:
                     return;
                 default:
                     System.out.println("Invalid choice, try again.");

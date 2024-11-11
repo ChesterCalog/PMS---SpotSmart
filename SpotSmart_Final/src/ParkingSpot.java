@@ -4,7 +4,7 @@ public class ParkingSpot {
 
     public ParkingSpot(int spotNumber) {
         this.spotNumber = spotNumber;
-        this.occupied = false; // Initially, the spot is free
+        this.occupied = false;
     }
 
     public int getSpotNumber() {
@@ -16,10 +16,10 @@ public class ParkingSpot {
     }
 
     public void occupy() {
-        occupied = true; // Mark spot as occupied
+        occupied = true;
     }
 
     public void free() {
-        occupied = false; // Mark spot as free
+        occupied = false;
     }
 }
