@@ -25,11 +25,8 @@ public class ParkingLot {
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement()) {
 
-            // Display car parking information
-            System.out.println("Car Parking:");
-            System.out.println(String.format("%-5s %-15s %-25s %-20s", "No.", "License Plate", "Owner", "Entry Time"));
-
-            // Fetch all car parking records from the database
+            System.out.println("\nCar Parking:");
+            System.out.printf("%-5s %-15s %-25s %-20s%n", "No.", "License Plate", "Owner", "Entry Time");
             ResultSet rs = stmt.executeQuery("SELECT * FROM CarParking ORDER BY parkingSpot");
             ArrayList<ParkingRecord> carRecords = new ArrayList<>();
             while (rs.next()) {
@@ -40,27 +37,23 @@ public class ParkingLot {
                 carRecords.add(new ParkingRecord(parkingSpot, licensePlate, owner, entryTime));
             }
 
-            // Display parking spots, ensuring all are shown
             for (int i = 1; i <= maxCarSpots; i++) {
                 boolean found = false;
                 for (ParkingRecord record : carRecords) {
                     if (record.getParkingSpot() == i) {
-                        System.out.println(String.format("%-5d %-15s %-20s %-20s", i,
-                                record.getLicensePlate(), record.getOwner(), record.getEntryTime()));
+                        System.out.printf("%-5d %-15s %-20s %-20s%n", i,
+                                record.getLicensePlate(), record.getOwner(), record.getEntryTime());
                         found = true;
                         break;
                     }
                 }
                 if (!found) {
-                    System.out.println(String.format("%-5d %-15s %-20s %-20s", i, "[empty slot]", "", ""));
+                    System.out.printf("%-5d %-15s %-20s %-20s%n", i, "[empty slot]", "", "");
                 }
             }
 
-            // Display motorcycle parking information
             System.out.println("\nMotorcycle Parking:");
-            System.out.println(String.format("%-5s %-15s %-20s %-20s", "No.", "License Plate", "Owner", "Entry Time"));
-
-            // Fetch all motorcycle parking records from the database
+            System.out.printf("%-5s %-15s %-20s %-20s%n", "No.", "License Plate", "Owner", "Entry Time");
             rs = stmt.executeQuery("SELECT * FROM MotorcycleParking ORDER BY parkingSpot");
             ArrayList<ParkingRecord> motorcycleRecords = new ArrayList<>();
             while (rs.next()) {
@@ -71,19 +64,18 @@ public class ParkingLot {
                 motorcycleRecords.add(new ParkingRecord(parkingSpot, licensePlate, owner, entryTime));
             }
 
-            // Display parking spots, ensuring all are shown
             for (int i = 1; i <= maxMotorcycleSpots; i++) {
                 boolean found = false;
                 for (ParkingRecord record : motorcycleRecords) {
                     if (record.getParkingSpot() == i) {
-                        System.out.println(String.format("%-5d %-15s %-20s %-20s", i,
-                                record.getLicensePlate(), record.getOwner(), record.getEntryTime()));
+                        System.out.printf("%-5d %-15s %-20s %-20s%n", i,
+                                record.getLicensePlate(), record.getOwner(), record.getEntryTime());
                         found = true;
                         break;
                     }
                 }
                 if (!found) {
-                    System.out.println(String.format("%-5d %-15s %-20s %-20s", i, "[empty slot]", "", ""));
+                    System.out.printf("%-5d %-15s %-20s %-20s%n", i, "[empty slot]", "", "");
                 }
             }
         }
@@ -154,7 +146,6 @@ public class ParkingLot {
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement()) {
 
-            // Check current count to ensure we haven't exceeded the limit
             ResultSet countRs = stmt.executeQuery(countQuery);
             if (countRs.next() && countRs.getInt(1) >= maxSpots) {
                 System.out.println("No available spots for " + vehicleType + ".");
@@ -168,7 +159,6 @@ public class ParkingLot {
                 if (rs.next()) {
                     parkingSpot = rs.getInt("nextAvailableSpot");
                     if (rs.wasNull()) {
-                        // No gaps, so assign the next spot after the maximum spot number
                         String maxSpotQuery = "SELECT IFNULL(MAX(parkingSpot), 0) + 1 AS nextSpot FROM " + tableName;
                         ResultSet maxRs = stmt.executeQuery(maxSpotQuery);
                         if (maxRs.next()) {
@@ -182,6 +172,7 @@ public class ParkingLot {
                 pstmt.setInt(3, parkingSpot);
                 pstmt.executeUpdate();
 
+                recordHistory(licensePlate, owner, vehicleType, parkingSpot, "Entry");
                 System.out.println("Vehicle added successfully to " + vehicleType + " parking at spot: " + parkingSpot);
             }
         }
@@ -201,21 +192,42 @@ public class ParkingLot {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
+            int parkingSpot = findParkingSpot(vehicleType, licensePlate);
+
+            String owner = findOwner(licensePlate);
             pstmt.setString(1, licensePlate);
             pstmt.executeUpdate();
-            System.out.println("Vehicle removed successfully.");
 
-            // Free the parking spot in memory
-            int parkingSpot = findParkingSpot(vehicleType, licensePlate);
+            recordHistory(licensePlate, owner, vehicleType, parkingSpot, "Exit");
+            System.out.println("Vehicle removed successfully.");
             freeSpot(vehicleType, parkingSpot);
         }
+    }
+
+    private String findOwner(String licensePlate) throws SQLException {
+        String[] tables = {"CarParking", "MotorcycleParking"};
+
+        for (String table : tables) {
+            String sql = "SELECT owner FROM " + table + " WHERE licensePlate = ?";
+
+            try (Connection conn = DatabaseConnection.getConnection();
+                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+                pstmt.setString(1, licensePlate);
+                ResultSet rs = pstmt.executeQuery();
+
+                if (rs.next()) {
+                    return rs.getString("owner");
+                }
+            }
+        }
+        return null;
     }
 
     public void clearAllVehicles() throws SQLException {
         Scanner scanner = new Scanner(System.in);
 
-        // Prompt for confirmation
-        System.out.println("Are you sure you want to clear all vehicles? (1 for yes / 2 for no): ");
+        System.out.println("Are you sure you want to clear all vehicles? (1 = Yes, 2 = No): ");
         String confirmation = scanner.nextLine().trim().toLowerCase();
 
         if (confirmation.equals("1")) {
@@ -240,7 +252,6 @@ public class ParkingLot {
         }
     }
 
-    // Helper function to determine if a license plate belongs to a car or motorcycle
     private String findVehicleType(String licensePlate) throws SQLException {
         String[] tables = {"CarParking", "MotorcycleParking"};
         for (String table : tables) {
@@ -273,7 +284,7 @@ public class ParkingLot {
                     System.out.println("Owner: " + rs.getString("owner"));
                     System.out.println("Parking Spot: " + rs.getInt("parkingSpot"));
                     System.out.println("Entry Time: " + rs.getTimestamp("entryTime"));
-                    return; // Exit after finding in CarParking
+                    return;
                 }
             }
 
@@ -287,11 +298,10 @@ public class ParkingLot {
                     System.out.println("Owner: " + rs.getString("owner"));
                     System.out.println("Parking Spot: " + rs.getInt("parkingSpot"));
                     System.out.println("Entry Time: " + rs.getTimestamp("entryTime"));
-                    return; // Exit after finding in MotorcycleParking
+                    return;
                 }
             }
 
-            // If not found in either table
             System.out.println("Vehicle with license plate " + licensePlate + " not found.");
         }
     }
@@ -309,26 +319,57 @@ public class ParkingLot {
                 return rs.getInt("parkingSpot");
             }
         }
-        return -1; // Spot not found
+        return -1;
     }
 
-    private int findAvailableSpot(String vehicleType) {
-        ArrayList<ParkingSpot> spots = vehicleType.equalsIgnoreCase("car") ? carSpots : motorcycleSpots;
-        for (ParkingSpot spot : spots) {
-            if (!spot.isOccupied()) {
-                return spot.getSpotNumber();
+    public void recordHistory(String licensePlate, String owner, String vehicleType, int parkingSpot, String action) throws SQLException {
+        String sql = "INSERT INTO History (licensePlate, owner, vehicleType, parkingSpot, action) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, licensePlate);
+            pstmt.setString(2, owner);
+            pstmt.setString(3, vehicleType);
+            pstmt.setInt(4, parkingSpot);
+            pstmt.setString(5, action);
+            pstmt.executeUpdate();
+        }
+    }
+
+    public void viewHistory() throws SQLException {
+        String sql = "SELECT * FROM History ORDER BY timestamp DESC";
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            System.out.println("\nParking History:");
+            System.out.printf("%-15s %-20s %-15s %-10s %-20s%n", "License Plate", "Owner", "Vehicle Type", "Action", "Timestamp");
+
+            while (rs.next()) {
+                System.out.printf("%-15s %-20s %-15s %-10s %-20s%n",
+                        rs.getString("licensePlate"),
+                        rs.getString("owner"),
+                        rs.getString("vehicleType"),
+                        rs.getString("action"),
+                        rs.getTimestamp("timestamp").toString());
             }
         }
-        return -1; // No available spot
     }
 
-    private void occupySpot(String vehicleType, int spotNumber) {
-        ArrayList<ParkingSpot> spots = vehicleType.equalsIgnoreCase("car") ? carSpots : motorcycleSpots;
-        for (ParkingSpot spot : spots) {
-            if (spot.getSpotNumber() == spotNumber) {
-                spot.occupy();
-                break;
+    public void deleteHistory() throws SQLException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Are you sure you want to delete all history records? (1 = Yes, 2 = No)");
+        int choice = scanner.nextInt();
+
+        if (choice == 1) {
+            try (Connection conn = DatabaseConnection.getConnection();
+                 Statement stmt = conn.createStatement()) {
+                stmt.executeUpdate("DELETE FROM history");
+                System.out.println("All history records have been deleted.");
             }
+        } else if (choice == 2) {
+            System.out.println("Delete history operation canceled.");
+        } else {
+            System.out.println("Invalid choice. Operation canceled.");
         }
     }
 

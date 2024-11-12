@@ -5,8 +5,8 @@ public class Main {
     public static void main(String[] args) throws SQLException {
         Scanner scanner = new Scanner(System.in);
         // Default parking spot counts
-        int carSpotsCount = 10;
-        int motorcycleSpotsCount = 10;
+        int carSpotsCount = 5;
+        int motorcycleSpotsCount = 5;
 
         String asciiArt =
                 " _____         _   _____               _   \n" +
@@ -54,8 +54,10 @@ public class Main {
             System.out.println("2. Remove Vehicle");
             System.out.println("3. Find Vehicle");
             System.out.println("4. Display Parking");
-            System.out.println("5. Clear All Vehicles");
-            System.out.println("6. Back to Main Menu");
+            System.out.println("5. View Parking History");
+            System.out.println("6. Clear All History");
+            System.out.println("7. Clear All Vehicles");
+            System.out.println("8. Back to Main Menu");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -94,13 +96,19 @@ public class Main {
                     parkingLot.displayParking();
                     break;
                 case 5:
+                    parkingLot.viewHistory();
+                    break;
+                case 6:
+                    parkingLot.deleteHistory();
+                    break;
+                case 7:
                     try {
                         parkingLot.clearAllVehicles();
                     } catch (SQLException e) {
                         System.out.println("Error clearing vehicles: " + e.getMessage());
                     }
                     break;
-                case 6:
+                case 8:
                     return;
                 default:
                     System.out.println("Invalid choice, try again.");

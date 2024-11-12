@@ -11,14 +11,6 @@ public class ParkingSpot {
         return spotNumber;
     }
 
-    public boolean isOccupied() {
-        return occupied;
-    }
-
-    public void occupy() {
-        occupied = true;
-    }
-
     public void free() {
         occupied = false;
     }
