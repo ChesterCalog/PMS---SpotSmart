@@ -9,6 +9,10 @@
 
 <h4 align="center">A Simple Parking Management Main w/ Database using Java and MySql </a>.</h4>
 
-## Key Features
+## I. Key Features
 
-[will be added soon]
+## II. OOP principles applied
+
+## III. Details of the chosen SDG and its integration
+
+## IV. Instructions for running the program
