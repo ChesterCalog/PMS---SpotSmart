@@ -7,7 +7,7 @@
   <br>
 </h1>
 
-<h4 align="center">A Simple Parking Management System w/ Database using Java and MySql </a>.</h4>
+<h4 align="center">A Simple Parking Management Main w/ Database using Java and MySql </a>.</h4>
 
 ## Key Features
 
