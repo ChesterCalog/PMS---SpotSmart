@@ -8,14 +8,17 @@ import parking.Vehicle;
 
 
 public class System {
-    private ArrayList<ParkingSpot> carSpots;
-    private ArrayList<ParkingSpot> motorcycleSpots;
+    private final ArrayList<ParkingSpot> carSpots;
+    private final ArrayList<ParkingSpot> motorcycleSpots;
     private final int maxCarSpots;
     private final int maxMotorcycleSpots;
 
+    //Constructor initializes the parking spots and their capacities
     public System(int carSpotsCount, int motorcycleSpotsCount) {
         this.maxCarSpots = carSpotsCount;
         this.maxMotorcycleSpots = motorcycleSpotsCount;
+
+        //initializes parking spots and their capacities
         carSpots = new ArrayList<>(carSpotsCount);
         motorcycleSpots = new ArrayList<>(motorcycleSpotsCount);
         for (int i = 1; i <= carSpotsCount; i++) {
@@ -30,9 +33,12 @@ public class System {
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement()) {
 
+            //Display car parking status
             java.lang.System.out.println("\nCar Parking:");
             java.lang.System.out.printf("%-5s %-15s %-25s %-20s%n", "No.", "License Plate", "Owner", "Entry Time");
             ResultSet rs = stmt.executeQuery("SELECT * FROM CarParking ORDER BY parkingSpot");
+
+            //Process car parking records
             ArrayList<ParkingRecord> carRecords = new ArrayList<>();
             while (rs.next()) {
                 int parkingSpot = rs.getInt("parkingSpot");
@@ -42,6 +48,7 @@ public class System {
                 carRecords.add(new ParkingRecord(parkingSpot, licensePlate, owner, entryTime));
             }
 
+            //Display car parking records or empty slots
             for (int i = 1; i <= maxCarSpots; i++) {
                 boolean found = false;
                 for (ParkingRecord record : carRecords) {
@@ -57,9 +64,12 @@ public class System {
                 }
             }
 
+            //Display motorcycle parking status
             java.lang.System.out.println("\nMotorcycle Parking:");
             java.lang.System.out.printf("%-5s %-15s %-20s %-20s%n", "No.", "License Plate", "Owner", "Entry Time");
             rs = stmt.executeQuery("SELECT * FROM MotorcycleParking ORDER BY parkingSpot");
+
+            //Process motorcycle parking records
             ArrayList<ParkingRecord> motorcycleRecords = new ArrayList<>();
             while (rs.next()) {
                 int parkingSpot = rs.getInt("parkingSpot");
@@ -69,6 +79,7 @@ public class System {
                 motorcycleRecords.add(new ParkingRecord(parkingSpot, licensePlate, owner, entryTime));
             }
 
+            //Display motorcycle parking records or empty slots
             for (int i = 1; i <= maxMotorcycleSpots; i++) {
                 boolean found = false;
                 for (ParkingRecord record : motorcycleRecords) {
@@ -83,36 +94,6 @@ public class System {
                     java.lang.System.out.printf("%-5d %-15s %-20s %-20s%n", i, "[empty slot]", "", "");
                 }
             }
-        }
-    }
-
-    public static class ParkingRecord {
-        private int parkingSpot;
-        private String licensePlate;
-        private String owner;
-        private Timestamp entryTime;
-
-        public ParkingRecord(int parkingSpot, String licensePlate, String owner, Timestamp entryTime) {
-            this.parkingSpot = parkingSpot;
-            this.licensePlate = licensePlate;
-            this.owner = owner;
-            this.entryTime = entryTime;
-        }
-
-        public int getParkingSpot() {
-            return parkingSpot;
-        }
-
-        public String getLicensePlate() {
-            return licensePlate;
-        }
-
-        public String getOwner() {
-            return owner;
-        }
-
-        public Timestamp getEntryTime() {
-            return entryTime;
         }
     }
 
@@ -186,7 +167,6 @@ public class System {
             }
         }
     }
-
 
     public void removeVehicle(String licensePlate) throws SQLException {
         String vehicleType = findVehicleType(licensePlate);

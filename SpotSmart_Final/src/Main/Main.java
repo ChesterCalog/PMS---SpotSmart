@@ -62,7 +62,7 @@ public class Main {
             java.lang.System.out.println("5. View Parking History");
             java.lang.System.out.println("6. Clear All History");
             java.lang.System.out.println("7. Clear All Vehicles");
-            java.lang.System.out.println("8. Back to System.Main Menu");
+            java.lang.System.out.println("8. Main Menu");
             java.lang.System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
