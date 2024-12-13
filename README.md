@@ -43,6 +43,8 @@ The database contains tables for CarParking, MotorcycleParking, and History, wit
 ├── main/
 │   ├── Main.java
 │   ├── DatabaseConnection.java
+│   ├── ParkingRecord.java
+│   ├── System.java
 ├── parking/
 │   ├── ParkingLot.java
 │   ├── ParkingSpot.java
@@ -92,7 +94,7 @@ The database contains tables for CarParking, MotorcycleParking, and History, wit
  - Open your <a href="https://dev.mysql.com/downloads/installer/">MySql Workbench</a>
  - Setup New Connection
  - Create a new Schema in the connected server
- - Run these Queries
+ - Run these Queries or Use the init.sql
 ```
 CREATE DATABASE ParkingManagement;
 
