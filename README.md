@@ -46,7 +46,6 @@ The database contains tables for CarParking, MotorcycleParking, and History, wit
 │   ├── ParkingRecord.java
 │   ├── System.java
 ├── parking/
-│   ├── ParkingLot.java
 │   ├── ParkingSpot.java
 │   ├── Vehicle.java
 │   ├── Car.java
@@ -126,7 +125,7 @@ CREATE TABLE History (
 ```
  - Open Intelij IDEA
  - Open Project Structures -> Modules -> Add the <a href="https://dev.mysql.com/downloads/connector/j/">MySql Connector</a> jar file located in lib and apply
- - Run Main.java
+ - Run Main.java in SpotSmart_Final/src/Main
  - Enjoy! :>
 
 
