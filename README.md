@@ -6,7 +6,7 @@
   <br>
 </h1>
 
-<h4 align="center">A Simple Parking Management Main w/ Database using Java and MySql </a>.</h4>
+<h4 align="center">A Simple Parking Management made w/ Database using Java and MySql </a>.</h4>
 
 ## I. A Brief Project Overview
 
@@ -72,8 +72,7 @@ The database contains tables for CarParking, MotorcycleParking, and History, wit
 ## III. Details of the Chosen SDG and its Integration
 
 ### Chosen SDG: SDG 11 - Sustainable Cities and Communities
-*Target*: 11.2 - Provide access to safe, affordable, accessible and sustainable transport systems for all, improving road safety, and expanding public transport, with special attention to the needs of those in vulnerable situations, women, children, persons with disabilities and older persons.
-
+*Target*: 11.2 - Provide access to safe, affordable, accessible and sustainable transport systems for all, improving road safety, and expanding public transport.
 ### Integration of SDG 11:
   **Improving Transport Efficiency:**
  - By effectively managing parking spots, SpotSmart helps to reduce the amount of time spent by drivers searching for parking, which in turn reduces traffic congestion. 
