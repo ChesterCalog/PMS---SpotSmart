@@ -10,6 +10,12 @@
 
 ## I. A Brief Project Overview
 
+### Parking Spot Management and Dynamic Configuration:
+ - Parking spots are divided into separate sections for cars and motorcycles.
+   Users can view available spots and parking details in real time.
+ - The system allows administrators to set the number of parking spots available for both cars 
+   and motorcycles.
+
 ### Vehicle Management:
  - Add Vehicle: Users can register vehicles by entering the license plate, owner's name, and 
    type (car or motorcycle).
@@ -17,12 +23,6 @@
    license plate.
  - Find Vehicle: Allows users to search for a vehicle by license plate and retrieve its parking 
    details.
-
-### Parking Spot Management and Dynamic Configuration:
- - Parking spots are divided into separate sections for cars and motorcycles.
-   Users can view available spots and parking details in real time.
- - The system allows administrators to set the number of parking spots available for both cars 
-   and motorcycles.
 
 ### Parking History:
  - Every entry and exit of vehicles is logged with details such as license plate, owner, vehicle type, parking spot, and timestamp.
