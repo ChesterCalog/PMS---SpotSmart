@@ -120,11 +120,23 @@ CREATE TABLE History (
     parkingSpot INT,
     action VARCHAR(10),  -- "Entry" or "Exit"
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    CONSTRAINT FK_Car FOREIGN KEY (licensePlate) REFERENCES CarParking(licensePlate) ON DELETE SET NULL,
+    CONSTRAINT FK_Motorcycle FOREIGN KEY (licensePlate) REFERENCES MotorcycleParking(licensePlate) ON DELETE SET NULL
 );
 ```
  - Open Intelij IDEA
  - Open Project Structures -> Modules -> Add the <a href="https://dev.mysql.com/downloads/connector/j/">MySql Connector</a> jar file located in lib and apply
  - Run Main.java in SpotSmart_Final/src/Main
  - Enjoy! :>
+
+## V. The Schema of Database
+
+<h1 align="center">
+  <br>
+ <img src="https://github.com/ChesterCalog/PMS---SpotSmart/blob/main/db/schema.png" alt="SpotSmart" width="700"></a>
+  <br>
+  <br>
+</h1>
+
 
 
